@@ -20,22 +20,30 @@ export default class Planet extends EventEmitter {
   }
 
   async populate() {
-    const peopleData = [...this.peopleData];
+    // const peopleData = [...this.peopleData];
+    //
+    // async function populateEx(peopleData) {
+    //   if (!peopleData || peopleData.length === 0) {
+    //     this.emit(Planet.events.POPULATING_COMPLETED);
+    //   } else {
+    //     const person = peopleData[0];
+    //
+    //     await delay(this.config.populationDelay);
+    //     this.population.push(new Person(person.name, person.height, person.mass));
+    //     this.emit(Planet.events.PERSON_BORN, { filmUrls: person.films });
+    //
+    //     await populateEx.call(this, peopleData.slice(1));
+    //   }
+    // }
+    //
+    // await populateEx.call(this, peopleData);
+    for (let i = 0; i < this.peopleData.length; i++) {
+      const person = this.peopleData[i];
 
-    async function populateEx(peopleData) {
-      if (!peopleData || peopleData.length === 0) {
-        this.emit(Planet.events.POPULATING_COMPLETED);
-      } else {
-        const person = peopleData[0];
-
-        await delay(this.config.populationDelay);
-        this.population.push(new Person(person.name, person.height, person.mass));
-        this.emit(Planet.events.PERSON_BORN, { filmUrls: person.films });
-
-        await populateEx.call(this, peopleData.slice(1));
-      }
+      await delay(this.config.populationDelay);
+      this.population.push(new Person(person.name, person.height, person.mass));
+      this.emit(Planet.events.PERSON_BORN, { filmUrls: person.films });
     }
-
-    await populateEx.call(this, peopleData);
+    this.emit(Planet.events.POPULATING_COMPLETED);
   }
 }
