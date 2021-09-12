@@ -1,5 +1,6 @@
 import config from '../config';
 import EventEmitter from 'eventemitter3';
+import StarWarsUniverse from './custom/StarWarsUniverse';
 
 const EVENTS = {
   APP_READY: 'app_ready',
@@ -23,6 +24,14 @@ export default class Application extends EventEmitter {
     return EVENTS;
   }
 
+  onUniversePopulated(payload) {
+    // eslint-disable-next-line no-console
+    console.log(`StarWarsUniverse.events.UNIVERSE_POPULATED event received`);
+    // eslint-disable-next-line no-console
+    console.log(payload);
+    this.data.universe = payload;
+  }
+
   /**
    * Initializes the app.
    * Called when the DOM has loaded. You can initiate your custom classes here
@@ -31,7 +40,11 @@ export default class Application extends EventEmitter {
    */
   async init() {
     // Initiate classes and wait for async operations here.
+    const starWarsUniverse = new StarWarsUniverse();
 
+    // eslint-disable-next-line max-len
+    starWarsUniverse.addListener(StarWarsUniverse.events.UNIVERSE_POPULATED, this.onUniversePopulated.bind(this, starWarsUniverse));
+    await starWarsUniverse.init();
     this.emit(Application.events.APP_READY);
   }
 }
